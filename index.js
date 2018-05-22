@@ -2,10 +2,10 @@
 
 const url = require('url');
 const xmlbuilder = require('xmlbuilder');
-const { ssml, presets } = require('./features');
+const { ssml10, presets } = require('./features');
 
 /*::
-type Features = typeof ssml;
+type Features = typeof ssml10;
 type Opts = {
   features: Features,
   base?: ?string,
@@ -212,12 +212,16 @@ class SpeechBuilder {
   toString() /*: string */ {
     return this.el.end();
   }
+
+  replace(pattern, replacement) {
+    return this.toString().replace(pattern, replacement);
+  }
 }
 
 function features(opts /*: any */) /*: Features */ {
   if (typeof opts == 'string') opts = presets[opts];
   if (typeof opts == 'object') return { ...presets.default, ...opts };
-  return ssml;
+  return ssml10;
 }
 
 function configure(opts /*: any */ = {}) /*: Opts */ {
@@ -225,6 +229,10 @@ function configure(opts /*: any */ = {}) /*: Opts */ {
   return { features: features(opts) };
 }
 
-module.exports = function(opts /*: ?string | Object */) {
+function ssml(opts /*: ?string | Object */) {
   return new SpeechBuilder(configure(opts));
+}
+
+module.exports = {
+  ssml,
 };

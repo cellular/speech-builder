@@ -1,6 +1,6 @@
 // @flow
 
-const ssml = {
+const ssml10 = {
   speak: {
     version: '1.0',
     xmlns: 'http://www.w3.org/2001/10/synthesis',
@@ -23,12 +23,12 @@ const ssml = {
 
 const presets = {
   default: {
-    ...ssml,
+    ...ssml10,
     speak: {},
   },
 
   alexa: {
-    ...ssml,
+    ...ssml10,
     speak: {},
     lang: false,
     audio: {
@@ -39,19 +39,19 @@ const presets = {
   },
 
   google: {
-    ...ssml,
+    ...ssml10,
     speak: {},
     phoneme: false,
     prosody: false,
   },
 
   cortana: {
-    ...ssml,
+    ...ssml10,
     emphasis: false,
   },
 };
 
 module.exports = {
-  ssml,
+  ssml10,
   presets,
 };

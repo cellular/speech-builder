@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "docs": "documentation readme index.js --section API",
-    "lint": "cellular-lint",    
+    "lint": "cellular-lint",
     "precommit": "cellular-lint-staged"
   },
   "keywords": [],
