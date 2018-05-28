@@ -1,7 +1,7 @@
 {
   "name": "speech-builder",
   "version": "1.0.0",
-  "description": "",
+  "description": "Utility to generate SSML markup for different voice platforms",
   "main": "index.js",
   "scripts": {
     "test": "jest",
@@ -9,7 +9,7 @@
     "lint": "cellular-lint",
     "precommit": "cellular-lint-staged"
   },
-  "keywords": [],
+  "keywords": ["ssml", "voice", "alexa"],
   "author": "",
   "license": "MIT",
   "dependencies": {
