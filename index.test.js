@@ -24,7 +24,7 @@ test('random', () => {
   ).toEqual('<speak>hello world</speak>');
 });
 
-test('random', () => {
+test('chance', () => {
   mockRandom(0.3);
   expect(
     ssml()
@@ -33,4 +33,18 @@ test('random', () => {
       .add('world')
       .toString()
   ).toEqual('<speak>hello beautiful world</speak>');
+});
+
+test('random function', () => {
+  mockRandom(0.3);
+  expect(
+    ssml()
+      .add(
+        random(
+          s => s.add('hello').audio({ src: 'world.mp3' }),
+          s => s.audio({ src: 'hello.mp3' }).add('world')
+        )
+      )
+      .toString()
+  ).toEqual('<speak>hello<audio src="world.mp3"/></speak>');
 });

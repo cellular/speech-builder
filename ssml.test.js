@@ -296,3 +296,18 @@ describe('prosody', () => {
     expect(speak.toString()).toEqual('<speak>hey ho</speak>');
   });
 });
+
+describe('lexicon', () => {
+  test('add', () => {
+    const speak = ssml({
+      features: 'alexa',
+      lexicon: {
+        foo: 'fu',
+        bar: { sub: 'ba' },
+      },
+    }).add('foo bar');
+    expect(speak.toString()).toEqual(
+      '<speak><phoneme alphabet="ipa" ph="fu">foo</phoneme> <sub alias="ba">bar</sub></speak>'
+    );
+  });
+});

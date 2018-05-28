@@ -11,6 +11,9 @@ type Opts = {
   base?: ?string,
   lang?: ?string,
   pretty?: boolean,
+  lexicon?: {
+    [string]: string | {[string]: string}
+  }
 }
 */
 
@@ -76,7 +79,8 @@ class SpeechBuilder {
    * previous one alreads ends with whitespace).
    */
   addToken(text /*: string | number */) {
-    const startsWithSpace = /^\s/.test(String(text));
+    const s = String(text);
+    const startsWithSpace = /^\s/.test(s);
     if (!startsWithSpace) {
       const { children } = this.el;
       const l = children.length;
@@ -86,15 +90,32 @@ class SpeechBuilder {
         if (value && /\S$/.test(value)) this.addText(' ');
       }
     }
-    return this.addText(text);
+    if (this.opts.lexicon) {
+      const re = /(\w+)|(\W+)/g;
+      let m;
+      while ((m = re.exec(s))) {
+        const [, word, space] = m;
+        if (word) {
+          const ph = this.opts.lexicon[word];
+          if (ph) this.phoneme(word, ph);
+          else this.addText(word);
+        }
+        if (space) this.addText(space);
+      }
+    } else {
+      this.addText(s);
+    }
+    return this;
   }
 
   /**
-   * Like `addToken` but also accepts a function.
+   * Like `addToken` but also accepts a function or an array.
    */
   add(content /*: any */) {
     if (typeof content == 'function') content(this);
-    else if (typeof content == 'string' || typeof content == 'number') {
+    else if (content instanceof Array) {
+      content.forEach(c => this.add(c));
+    } else if (typeof content == 'string' || typeof content == 'number') {
       this.addToken(content);
     }
     return this;
@@ -119,7 +140,7 @@ class SpeechBuilder {
     if (phoneme instanceof Array) return phoneme;
     if (typeof phoneme == 'string') return [phoneme];
     if (phoneme) return ['ipa'];
-    return this.features.sub ? ['sub'] : [];
+    return [];
   }
 
   /**
@@ -128,7 +149,9 @@ class SpeechBuilder {
    * @private
    */
   getSupportedPhoneme(dict /*: { [string]: string } */) {
-    const alphabet = this.alphabets.find(a => a in dict);
+    const { alphabets } = this;
+    if (this.features.sub) alphabets.push('sub');
+    const alphabet = alphabets.find(a => a in dict);
     if (alphabet && alphabet in dict) {
       return {
         alphabet,
@@ -147,7 +170,7 @@ class SpeechBuilder {
   phoneme(text /*: string */, ph /*: string | { [string]: string } */) {
     const dict = typeof ph == 'object' ? ph : { ipa: ph };
     const attrs = this.getSupportedPhoneme(dict);
-    if (!attrs) return this.add(text);
+    if (!attrs) return this.addText(text);
     if (attrs.alphabet == 'sub') return this.sub(text, attrs.ph);
     this.el.ele('phoneme', attrs, text);
     return this;
