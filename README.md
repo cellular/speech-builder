@@ -1,5 +1,7 @@
 # speech-builder
 
+[![Build Status](https://travis-ci.org/cellular/speech-builder.svg?branch=master)](https://travis-ci.org/cellular/speech-builder)
+
 Utility to build SSML documents for different voice platforms.
 
 ## Motivation / Approach
