@@ -75,7 +75,7 @@ previous one alreads ends with whitespace).
 
 ### add
 
-Like `addToken` but also accepts a function.
+Like `addToken` but also accepts a function or an array.
 
 **Parameters**
 
