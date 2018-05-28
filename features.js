@@ -31,6 +31,7 @@ const presets = {
     ...ssml10,
     speak: {},
     lang: false,
+    phoneme: ['ipa', 'x-sampa'],
     audio: {
       children: false,
     },
@@ -48,6 +49,7 @@ const presets = {
   cortana: {
     ...ssml10,
     emphasis: false,
+    phoneme: ['ipa', 'sapi', 'ups'],
   },
 };
 

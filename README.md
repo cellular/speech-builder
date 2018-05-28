@@ -13,13 +13,13 @@ To address this issue, speech-builder accepts a list of feature flags as configu
 ```js
 const { ssml } = require('speech-builder');
 
-const s = ssml().add('Hello ').emphasis('world');
+const s = ssml().add('Hello').emphasis('world');
 
 console.log(s.toString());
 ```
 
 ```xml
-<speak>Hello <emphasis>world</emphasis></speak>
+<speak>Hello<emphasis>world</emphasis></speak>
 ```
 
 ## API
@@ -29,6 +29,8 @@ console.log(s.toString());
 #### Table of Contents
 
 -   [lang](#lang)
+-   [addText](#addtext)
+-   [addToken](#addtoken)
 -   [add](#add)
 -   [sub](#sub)
 -   [phoneme](#phoneme)
@@ -41,6 +43,7 @@ console.log(s.toString());
 -   [effect](#effect)
 -   [sayAs](#sayas)
 -   [prosody](#prosody)
+-   [replace](#replace)
 
 ### lang
 
@@ -49,15 +52,32 @@ If not supported, this is a no-op.
 
 **Parameters**
 
--   `lang`  
+-   `lang` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 
-### add
+### addText
 
 Adds text. Characters with special meaning in XML are properly escaped.
 
 **Parameters**
 
--   `content`  
+-   `text` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
+
+### addToken
+
+Like `addText` but prepends a space (unless it's the first token or the
+previous one alreads ends with whitespace).
+
+**Parameters**
+
+-   `text` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
+
+### add
+
+Like `addToken` but also accepts a function.
+
+**Parameters**
+
+-   `content` **any** 
 
 ### sub
 
@@ -66,19 +86,21 @@ the alias is added as text instead.
 
 **Parameters**
 
--   `text`  
--   `alias`  
+-   `text` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `alias` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ### phoneme
 
-Adds a `<phoneme>` tag. If phonemes are not supported,
-the text is added as-is.
+Adds a `<phoneme>` tag. When an object with notations in
+different alphabets is passed as `ph`, the first one
+that is supported will be used. For platforms without phoneme
+support, the special `sub` alphabet can be used to generate
+a `<sub>` tag as fallback.
 
 **Parameters**
 
--   `text`  
--   `ph`  
--   `alphabet`   (optional, default `/*: string */'ipa'`)
+-   `text` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `ph` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | {})** 
 
 ### break
 
@@ -86,7 +108,7 @@ Adds a `<break>` tag. If not supported, this is a no-op.
 
 **Parameters**
 
--   `time`  
+-   `time` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)? | [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
 
 ### audio
 
@@ -95,7 +117,7 @@ is added as plain text.
 
 **Parameters**
 
--   `src`  
+-   `src` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | {src: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), alt: [string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?})** 
 
 ### emphasis
 
@@ -103,8 +125,8 @@ Adds an `<emphasis>` tag. If not supported, the text is added as-is.
 
 **Parameters**
 
--   `content`  
--   `level`  
+-   `content` **any** 
+-   `level` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 
 ### p
 
@@ -112,7 +134,7 @@ Adds a `<p>` tag. If not supported, the text is added as-is.
 
 **Parameters**
 
--   `content`  
+-   `content` **any** 
 
 ### s
 
@@ -120,7 +142,7 @@ Adds an `<s>` tag. If not supported, the text is added as-is.
 
 **Parameters**
 
--   `content`  
+-   `content` **any** 
 
 ### w
 
@@ -128,8 +150,8 @@ Adds a `<w>` tag. If not supported, the text is added as-is.
 
 **Parameters**
 
--   `role`  
--   `content`  
+-   `role` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `content` **any** 
 
 ### effect
 
@@ -138,19 +160,19 @@ NOTE: The namespace can be configured via the `effect` feature setting.
 
 **Parameters**
 
--   `name`  
--   `content`  
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `content` **any** 
 
 ### sayAs
 
-Adds an `<say-`as> tag. If not supported, the text is added as-is.
+Adds an `<say-as>` tag. If not supported, the text is added as-is.
 
 **Parameters**
 
--   `interpretAs`  
--   `text`  
--   `format`  
--   `detail`  
+-   `interpretAs` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `text` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
+-   `format` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
+-   `detail` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)? | [number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
 
 ### prosody
 
@@ -158,8 +180,28 @@ Adds a `<prosody>` tag. If not supported, the text is added as-is.
 
 **Parameters**
 
--   `attrs`  
--   `text`  
+-   `attrs` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `text` **any** 
+
+### replace
+
+Duck-type as string to support the Jovo framework.
+
+**Parameters**
+
+-   `pattern` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [RegExp](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/RegExp))** 
+-   `replacement` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function))** 
+
+## Adding variations
+
+```js
+const { ssml, random, chance } = require('.');
+
+ssml()
+  .add(random('hello', 'ciao', 'hola', 'salut'))
+  .add(chance(0.5, 'beautiful'))
+  .add('world');
+```
 
 # License
 
