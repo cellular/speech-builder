@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "cellular-lint": "^1.0.6",
-    "documentation": "^6.3.3",
+    "documentation": "^7.1.0",
     "flow-bin": "^0.72.0",
     "jest": "^22.4.3",
     "jest-mock-random": "^1.0.2"
