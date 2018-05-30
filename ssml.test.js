@@ -310,4 +310,16 @@ describe('lexicon', () => {
       '<speak><phoneme alphabet="ipa" ph="fu">foo</phoneme> <sub alias="ba">bar</sub></speak>'
     );
   });
+
+  test('non-breaking spaces', () => {
+    const speak = ssml({
+      features: 'alexa',
+      lexicon: {
+        'Lloris Hugo': 'lɔʹris yˌgo',
+      },
+    }).add('Welcome Lloris Hugo');
+    expect(speak.toString()).toEqual(
+      '<speak>Welcome <phoneme alphabet="ipa" ph="lɔʹris yˌgo">Lloris Hugo</phoneme></speak>'
+    );
+  });
 });

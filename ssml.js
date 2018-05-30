@@ -91,7 +91,7 @@ class SpeechBuilder {
       }
     }
     if (this.opts.lexicon) {
-      const re = /(\w+)|(\W+)/g;
+      const re = /([\w\u00A0]+)|(\W+)/g;
       let m;
       while ((m = re.exec(s))) {
         const [, word, space] = m;
