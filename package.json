@@ -1,6 +1,6 @@
 {
   "name": "speech-builder",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Utility to generate SSML markup for different voice platforms",
   "main": "index.js",
   "scripts": {
