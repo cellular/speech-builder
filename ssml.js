@@ -90,13 +90,14 @@ class SpeechBuilder {
         if (value && /\S$/.test(value)) this.addText(' ');
       }
     }
-    if (this.opts.lexicon) {
+    const { lexicon } = this.opts;
+    if (lexicon) {
       const re = /([\w\u00A0]+)|(\W+)/g;
       let m;
       while ((m = re.exec(s))) {
         const [, word, space] = m;
         if (word) {
-          const ph = this.opts.lexicon[word];
+          const ph = lexicon[word];
           if (ph) this.phoneme(word, ph);
           else this.addText(word);
         }
