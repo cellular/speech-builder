@@ -311,6 +311,21 @@ describe('lexicon', () => {
     );
   });
 
+  test('add twice', () => {
+    const speak = ssml({
+      features: 'alexa',
+      lexicon: {
+        foo: 'fu',
+        bar: { sub: 'ba' },
+      },
+    })
+      .add('bar')
+      .add('foo');
+    expect(speak.toString()).toEqual(
+      '<speak><sub alias="ba">bar</sub><phoneme alphabet="ipa" ph="fu">foo</phoneme></speak>'
+    );
+  });
+
   test('multi word tokens', () => {
     const speak = ssml({
       features: 'alexa',
