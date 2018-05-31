@@ -2,6 +2,7 @@
 
 const url = require('url');
 const xmlbuilder = require('xmlbuilder');
+const escapeRe = require('escape-string-regexp');
 const { ssml10, presets } = require('./features');
 
 /*::
@@ -22,6 +23,7 @@ class SpeechBuilder {
   opts: Opts;
   features: Features;
   el: any;
+  lexiconRe: ?RegExp;
   */
 
   constructor(opts /*: Opts */, el /*: any */) {
@@ -36,6 +38,12 @@ class SpeechBuilder {
     if (opts.base && base) this.el.att('xml:base', opts.base);
 
     this.lang(opts.lang || lang);
+    if (opts.lexicon) {
+      const words = Object.keys(opts.lexicon)
+        .map(escapeRe)
+        .join('|');
+      this.lexiconRe = new RegExp(`(${words})|(.+?)`, 'g');
+    }
   }
 
   /**
@@ -91,17 +99,16 @@ class SpeechBuilder {
       }
     }
     const { lexicon } = this.opts;
-    if (lexicon) {
-      const re = /([\w\u00A0]+)|(\W+)/g;
+    const re = this.lexiconRe;
+    if (lexicon && re) {
       let m;
       while ((m = re.exec(s))) {
-        const [, word, space] = m;
-        if (word) {
-          const ph = lexicon[word];
-          if (ph) this.phoneme(word, ph);
-          else this.addText(word);
-        }
-        if (space) this.addText(space);
+        const [, grapheme, literal] = m;
+        if (grapheme) {
+          const ph = lexicon[grapheme];
+          if (ph) this.phoneme(grapheme, ph);
+          else this.addText(grapheme);
+        } else this.addText(literal);
       }
     } else {
       this.addText(s);

@@ -311,15 +311,15 @@ describe('lexicon', () => {
     );
   });
 
-  test('non-breaking spaces', () => {
+  test('multi word tokens', () => {
     const speak = ssml({
       features: 'alexa',
       lexicon: {
-        'Lloris Hugo': 'lɔʹris yˌgo',
+        'Lloris Hugo': 'lɔʹris yˌgo',
       },
-    }).add('Welcome Lloris Hugo');
+    }).add('Welcome Lloris Hugo');
     expect(speak.toString()).toEqual(
-      '<speak>Welcome <phoneme alphabet="ipa" ph="lɔʹris yˌgo">Lloris Hugo</phoneme></speak>'
+      '<speak>Welcome <phoneme alphabet="ipa" ph="lɔʹris yˌgo">Lloris Hugo</phoneme></speak>'
     );
   });
 });

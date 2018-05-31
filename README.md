@@ -45,23 +45,12 @@ ssml({
   features: 'alexa',
   lexicon: {
     "Passquote": "paskvoːtə",
-    "Lloris\u00a0Hugo": { 
+    "Lloris Hugo": { 
       ipa: "lɔʹris yˌgo", 
       sub: "Lohrieß Ügo"
     }
   }
 });
-```
-
-**NOTE:** The lookup is currently performed word wise. In the example above
-`Lloris\u00a0Hugo` is written with a non-breaking space to get treated as a
-single token. In order for this work, the name must be written with such a
-space in the added text, too:
-
-```js
-speech.add(
-  `Hello ${name.replace(' ', '\u00a0')}`
-);
 ```
 
 ### Pretty Printing
