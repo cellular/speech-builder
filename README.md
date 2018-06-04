@@ -231,7 +231,8 @@ Duck-type as string to support the Jovo framework.
 ## Adding variations
 
 ```js
-const { ssml, random, chance } = require('speech-builder');
+const { ssml } = require('speech-builder');
+const { random, chance } = require('variation');
 
 ssml()
   .add(random('hello', 'ciao', 'hola', 'salut'))
