@@ -337,4 +337,16 @@ describe('lexicon', () => {
       '<speak>Welcome <phoneme alphabet="ipa" ph="lɔʹris yˌgo">Lloris Hugo</phoneme></speak>'
     );
   });
+
+  test('word boundaries', () => {
+    const speak = ssml({
+      features: 'alexa',
+      lexicon: {
+        foo: 'fu',
+      },
+    }).add('foobar foo');
+    expect(speak.toString()).toEqual(
+      '<speak>foobar <phoneme alphabet="ipa" ph="fu">foo</phoneme></speak>'
+    );
+  });
 });
