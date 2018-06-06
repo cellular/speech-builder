@@ -349,4 +349,30 @@ describe('lexicon', () => {
       '<speak>foobar <phoneme alphabet="ipa" ph="fu">foo</phoneme></speak>'
     );
   });
+
+  test('pretty print', () => {
+    const speak = ssml({
+      features: 'alexa',
+      pretty: true,
+      lexicon: {
+        Hello: 'helo',
+      },
+    })
+      .add('Hello world')
+      .p(s =>
+        s
+          .add('Nice to see')
+          .emphasis('you')
+          .add('!')
+      );
+
+    expect(speak.toString()).toEqual(`<speak>
+  <phoneme alphabet="ipa" ph="helo">Hello</phoneme>
+   world
+  <p>
+    Nice to see
+    <emphasis>you</emphasis>
+  </p>
+</speak>`);
+  });
 });

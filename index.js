@@ -42,7 +42,7 @@ class SpeechBuilder {
       const words = Object.keys(opts.lexicon)
         .map(escapeRe)
         .join('|');
-      this.lexiconRe = new RegExp(`\\b(${words})\\b|(.+?)`, 'g');
+      this.lexiconRe = new RegExp(`\\b(?:(${words})|(.+?))\\b`, 'g');
     }
   }
 
@@ -78,7 +78,9 @@ class SpeechBuilder {
    * Adds text. Characters with special meaning in XML are properly escaped.
    */
   addText(text /*: string | number */) {
-    this.el.text(text);
+    const prev = previousSibling(this.el);
+    if (prev && prev.value) prev.value += text;
+    else this.el.text(text);
     return this;
   }
 
@@ -90,13 +92,9 @@ class SpeechBuilder {
     const s = String(text);
     const startsWithSpace = /^\s/.test(s);
     if (!startsWithSpace) {
-      const { children } = this.el;
-      const l = children.length;
-      if (l) {
-        const last = children[l - 1];
-        const { value } = last;
-        if (value && /\S$/.test(value)) this.addText(' ');
-      }
+      const prev = previousSibling(this.el);
+      const value = prev && prev.value;
+      if (value && /\S$/.test(value)) this.addText(' ');
     }
     const { lexicon } = this.opts;
     const re = this.lexiconRe;
@@ -311,6 +309,12 @@ class SpeechBuilder {
   ) {
     return this.toString().replace(pattern, replacement);
   }
+}
+
+function previousSibling(el) {
+  const { children } = el;
+  const l = children.length;
+  return l ? children[l - 1] : null;
 }
 
 function features(opts /*: any */) /*: Features */ {
