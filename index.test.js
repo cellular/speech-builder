@@ -332,9 +332,9 @@ describe('lexicon', () => {
       lexicon: {
         'Lloris Hugo': 'lɔʹris yˌgo',
       },
-    }).add('Welcome Lloris Hugo');
+    }).add('Welcome Lloris Hugo!');
     expect(speak.toString()).toEqual(
-      '<speak>Welcome <phoneme alphabet="ipa" ph="lɔʹris yˌgo">Lloris Hugo</phoneme></speak>'
+      '<speak>Welcome <phoneme alphabet="ipa" ph="lɔʹris yˌgo">Lloris Hugo</phoneme>!</speak>'
     );
   });
 
@@ -344,9 +344,9 @@ describe('lexicon', () => {
       lexicon: {
         foo: 'fu',
       },
-    }).add('foobar foo');
+    }).add('foobar foo. foo, bar!');
     expect(speak.toString()).toEqual(
-      '<speak>foobar <phoneme alphabet="ipa" ph="fu">foo</phoneme></speak>'
+      '<speak>foobar <phoneme alphabet="ipa" ph="fu">foo</phoneme>. <phoneme alphabet="ipa" ph="fu">foo</phoneme>, bar!</speak>'
     );
   });
 
@@ -372,6 +372,7 @@ describe('lexicon', () => {
   <p>
     Nice to see
     <emphasis>you</emphasis>
+    !
   </p>
 </speak>`);
   });

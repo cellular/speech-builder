@@ -42,7 +42,7 @@ class SpeechBuilder {
       const words = Object.keys(opts.lexicon)
         .map(escapeRe)
         .join('|');
-      this.lexiconRe = new RegExp(`\\b(?:(${words})|(.+?))\\b`, 'g');
+      this.lexiconRe = new RegExp(`\\b(${words})\\b|([^]+?)`, 'g');
     }
   }
 
