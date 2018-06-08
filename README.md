@@ -85,6 +85,8 @@ ssml().p('Hello').p('world!').toPlainText();
 -   [effect](#effect)
 -   [sayAs](#sayas)
 -   [prosody](#prosody)
+-   [toString](#tostring)
+-   [toPlainText](#toplaintext)
 -   [replace](#replace)
 
 ### lang
@@ -129,7 +131,7 @@ the alias is added as text instead.
 **Parameters**
 
 -   `text` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `alias` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `alias` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 
 ### phoneme
 
@@ -142,7 +144,7 @@ a `<sub>` tag as fallback.
 **Parameters**
 
 -   `text` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
--   `ph` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) | {})** 
+-   `ph` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)? | {})** 
 
 ### break
 
@@ -224,6 +226,19 @@ Adds a `<prosody>` tag. If not supported, the text is added as-is.
 
 -   `attrs` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 -   `text` **any** 
+
+### toString
+
+Returns the serialized SSML document.
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+### toPlainText
+
+Returns the document without any markup.
+Paragraphs are turned into line breaks.
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
 
 ### replace
 
