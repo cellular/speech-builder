@@ -46,6 +46,14 @@ describe('add', () => {
     expect(speak.toString()).toEqual('<speak>hello world</speak>');
   });
 
+  test('accented chars and punctuation', () => {
+    const speak = ssml()
+      .add('hellö')
+      .add('wörld')
+      .add('!');
+    expect(speak.toString()).toEqual('<speak>hellö wörld!</speak>');
+  });
+
   test('number', () => {
     const speak = ssml().add(42);
     expect(speak.toString()).toEqual('<speak>42</speak>');
@@ -217,7 +225,7 @@ describe('structure', () => {
       .p(p => p.s('one').s('two'))
       .add('three');
     expect(speak.toString()).toEqual(
-      '<speak>hello <p><s>one</s><s>two</s></p>three</speak>'
+      '<speak>hello <p><s>one</s> <s>two</s></p> three</speak>'
     );
   });
 
@@ -332,7 +340,7 @@ describe('lexicon', () => {
       .add('bar')
       .add('foo');
     expect(speak.toString()).toEqual(
-      '<speak><sub alias="ba">bar</sub><phoneme alphabet="ipa" ph="fu">foo</phoneme></speak>'
+      '<speak><sub alias="ba">bar</sub> <phoneme alphabet="ipa" ph="fu">foo</phoneme></speak>'
     );
   });
 
@@ -348,6 +356,18 @@ describe('lexicon', () => {
     );
   });
 
+  test('accented characters', () => {
+    const speak = ssml({
+      features: 'alexa',
+      lexicon: {
+        'röck döts': 'ˈɹɒk ˌdɒts',
+      },
+    }).add('Heavy metal umlauts, also referred to as röck döts.');
+    expect(speak.toString()).toEqual(
+      '<speak>Heavy metal umlauts, also referred to as <phoneme alphabet="ipa" ph="ˈɹɒk ˌdɒts">röck döts</phoneme>.</speak>'
+    );
+  });
+
   test('word boundaries', () => {
     const speak = ssml({
       features: 'alexa',
@@ -358,33 +378,6 @@ describe('lexicon', () => {
     expect(speak.toString()).toEqual(
       '<speak>foobar <phoneme alphabet="ipa" ph="fu">foo</phoneme>. <phoneme alphabet="ipa" ph="fu">foo</phoneme>, bar!</speak>'
     );
-  });
-
-  test('pretty print', () => {
-    const speak = ssml({
-      features: 'alexa',
-      pretty: true,
-      lexicon: {
-        Hello: 'helo',
-      },
-    })
-      .add('Hello world')
-      .p(s =>
-        s
-          .add('Nice to see')
-          .emphasis('you')
-          .add('!')
-      );
-
-    expect(speak.toString()).toEqual(`<speak>
-  <phoneme alphabet="ipa" ph="helo">Hello</phoneme>
-   world
-  <p>
-    Nice to see
-    <emphasis>you</emphasis>
-    !
-  </p>
-</speak>`);
   });
 });
 
@@ -401,7 +394,7 @@ test('toPlainText', () => {
     .p(p => p.audio({ src: 'audio.mp3', alt: 'What the audio says.' }));
 
   expect(speak.toString()).toEqual(
-    '<speak><p><s>Hello world!</s><s>How are<emphasis>you</emphasis>today?</s></p><p><audio src="audio.mp3">What the audio says.</audio></p></speak>'
+    '<speak><p><s>Hello world!</s> <s>How are <emphasis>you</emphasis> today?</s></p> <p><audio src="audio.mp3">What the audio says.</audio></p></speak>'
   );
 
   expect(speak.toPlainText()).toEqual(

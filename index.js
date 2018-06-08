@@ -5,6 +5,12 @@ const xmlbuilder = require('xmlbuilder');
 const escapeRe = require('escape-string-regexp');
 const { presets, ssml10 } = require('./features');
 const PlainTextWriter = require('./PlainTextWriter');
+const {
+  lastChild,
+  previousSibling,
+  isElement,
+  isWhiteSpace,
+} = require('./xmlutils');
 
 /*::
 type Features = typeof ssml10;
@@ -12,7 +18,7 @@ type Opts = {
   features: Features,
   base?: ?string,
   lang?: ?string,
-  pretty?: boolean,
+  smartSpacing?: ?boolean,
   lexicon?: {
     [string]: ?string | {[string]: ?string}
   }
@@ -79,10 +85,20 @@ class SpeechBuilder {
    * Adds text. Characters with special meaning in XML are properly escaped.
    */
   addText(text /*: string | number */) {
-    const prev = previousSibling(this.el);
+    const prev = lastChild(this.el);
     if (prev && prev.value) prev.value += text;
     else this.el.text(text);
     return this;
+  }
+
+  insertSpaceIfNeeded(nextText /*: string */) {
+    //if (this.opts.smartSpacing === false) return;
+    const followedByChar = /^[^\s!?,.:;]/.test(nextText);
+    const prev = lastChild(this.el);
+    const value = prev && prev.value;
+    const precededByElem = prev && typeof value != 'string';
+    const precededByChar = value && /\S$/.test(value);
+    if (followedByChar && (precededByChar || precededByElem)) this.addText(' ');
   }
 
   /**
@@ -91,12 +107,7 @@ class SpeechBuilder {
    */
   addToken(text /*: string | number */) {
     const s = String(text);
-    const startsWithSpace = /^\s/.test(s);
-    if (!startsWithSpace) {
-      const prev = previousSibling(this.el);
-      const value = prev && prev.value;
-      if (value && /\S$/.test(value)) this.addText(' ');
-    }
+    this.insertSpaceIfNeeded(s);
     const { lexicon } = this.opts;
     const re = this.lexiconRe;
     if (lexicon && re) {
@@ -301,7 +312,14 @@ class SpeechBuilder {
    */
   toString() /*: string */ {
     return this.el.end({
-      pretty: this.opts.pretty,
+      writer: {
+        element(node, level) {
+          const supr = this.constructor.prototype.element;
+          const prev = previousSibling(node);
+          const space = isWhiteSpace(prev) ? '' : ' ';
+          return space + supr.call(this, node, level);
+        },
+      },
     });
   }
 
@@ -322,12 +340,6 @@ class SpeechBuilder {
   ) {
     return this.toString().replace(pattern, replacement);
   }
-}
-
-function previousSibling(el) {
-  const { children } = el;
-  const l = children.length;
-  return l ? children[l - 1] : null;
 }
 
 function features(opts /*: any */) /*: Features */ {

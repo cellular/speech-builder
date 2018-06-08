@@ -1,18 +1,4 @@
-function getNodeType(node) {
-  return node.constructor.name;
-}
-
-function isElement(node) {
-  return getNodeType(node) == 'XMLElement';
-}
-
-function isText(node) {
-  return getNodeType(node) == 'XMLText';
-}
-
-function textOrElement(node) {
-  return isText(node) || isElement(node);
-}
+const { isElement, isText, textOrElement } = require('./xmlutils');
 
 function append(s, t) {
   const noSpace = /\S$/.test(s) && /^\S/.test(t);
