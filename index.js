@@ -4,6 +4,7 @@ const url = require('url');
 const xmlbuilder = require('xmlbuilder');
 const escapeRe = require('escape-string-regexp');
 const { presets, ssml10 } = require('./features');
+const PlainTextWriter = require('./PlainTextWriter');
 
 /*::
 type Features = typeof ssml10;
@@ -294,10 +295,21 @@ class SpeechBuilder {
     return this;
   }
 
+  /**
+   * Returns the serialized SSML document.
+   */
   toString() /*: string */ {
     return this.el.end({
       pretty: this.opts.pretty,
     });
+  }
+
+  /**
+   * Returns the document without any markup.
+   * Paragraphs are turned into line breaks.
+   */
+  toPlainText() /*: string */ {
+    return this.el.end(new PlainTextWriter());
   }
 
   /**

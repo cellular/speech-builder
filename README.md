@@ -54,9 +54,15 @@ ssml({
 });
 ```
 
-### Pretty Printing
+### Plain Text Output
 
-By default the generated SSML is optimized for size rather than readability. You can pass `pretty: true` as option to get an output with human friendly indentations instead.
+The speech-builder can not only output SSML markup but also a plain text
+representation with `<p>` tags converted into line breaks. This is useful
+for adding some basic formatting for visual surfaces.
+
+```js
+ssml().p('Hello').p('world!').toPlainText();
+```
 
 ## API
 

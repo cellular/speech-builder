@@ -377,3 +377,26 @@ describe('lexicon', () => {
 </speak>`);
   });
 });
+
+test('toPlainText', () => {
+  const speak = ssml()
+    .p(p =>
+      p.s('Hello world!').s(s =>
+        s
+          .add('How are')
+          .emphasis('you')
+          .add('today?')
+      )
+    )
+    .p(p => p.audio({ src: 'audio.mp3', alt: 'What the audio says.' }));
+
+  expect(speak.toString()).toEqual(
+    '<speak><p><s>Hello world!</s><s>How are<emphasis>you</emphasis>today?</s></p><p><audio src="audio.mp3">What the audio says.</audio></p></speak>'
+  );
+
+  expect(speak.toPlainText()).toEqual(
+    `Hello world! How are you today?
+
+What the audio says.`
+  );
+});
