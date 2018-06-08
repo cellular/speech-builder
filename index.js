@@ -14,7 +14,7 @@ type Opts = {
   lang?: ?string,
   pretty?: boolean,
   lexicon?: {
-    [string]: string | {[string]: string}
+    [string]: ?string | {[string]: ?string}
   }
 }
 */
@@ -132,8 +132,8 @@ class SpeechBuilder {
    * Adds a `<sub>` tag. If substitions are not supported,
    * the alias is added as text instead.
    */
-  sub(text /*: string */, alias /*: string */) {
-    if (!this.features.sub) return this.add(alias);
+  sub(text /*: string */, alias /*: ?string */) {
+    if (!alias || !this.features.sub) return this.add(alias);
     this.el.ele('sub', { alias }, text);
     return this;
   }
@@ -155,11 +155,11 @@ class SpeechBuilder {
    * by alphabet.
    * @private
    */
-  getSupportedPhoneme(dict /*: { [string]: string } */) {
+  getSupportedPhoneme(dict /*: { [string]: ?string } */) {
     const { alphabets } = this;
     if (this.features.sub) alphabets.push('sub');
-    const alphabet = alphabets.find(a => a in dict);
-    if (alphabet && alphabet in dict) {
+    const alphabet = alphabets.find(a => dict[a]);
+    if (alphabet) {
       return {
         alphabet,
         ph: dict[alphabet],
@@ -174,7 +174,8 @@ class SpeechBuilder {
    * support, the special `sub` alphabet can be used to generate
    * a `<sub>` tag as fallback.
    */
-  phoneme(text /*: string */, ph /*: string | { [string]: string } */) {
+  phoneme(text /*: string */, ph /*: ?string | { [string]: ?string } */) {
+    if (!ph) return this.add(text);
     const dict = typeof ph == 'object' ? ph : { ipa: ph };
     const attrs = this.getSupportedPhoneme(dict);
     if (!attrs) return this.addText(text);

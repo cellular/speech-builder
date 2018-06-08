@@ -81,6 +81,16 @@ describe('phoneme', () => {
     );
   });
 
+  test('without alphabet', () => {
+    const speak = ssml('alexa').phoneme('Test');
+    expect(speak.toString()).toEqual('<speak>Test</speak>');
+  });
+
+  test('with empty phoneme', () => {
+    const speak = ssml('alexa').phoneme('Test', { ipa: null });
+    expect(speak.toString()).toEqual('<speak>Test</speak>');
+  });
+
   test('default alphabet', () => {
     const speak = ssml('alexa').phoneme('Quote', 'ˈkvoːtə');
     expect(speak.toString()).toEqual(
