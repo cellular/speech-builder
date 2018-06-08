@@ -5,12 +5,7 @@ const xmlbuilder = require('xmlbuilder');
 const escapeRe = require('escape-string-regexp');
 const { presets, ssml10 } = require('./features');
 const PlainTextWriter = require('./PlainTextWriter');
-const {
-  lastChild,
-  previousSibling,
-  isElement,
-  isWhiteSpace,
-} = require('./xmlutils');
+const { lastChild, previousSibling, isWhiteSpace } = require('./xmlutils');
 
 /*::
 type Features = typeof ssml10;
@@ -18,7 +13,6 @@ type Opts = {
   features: Features,
   base?: ?string,
   lang?: ?string,
-  smartSpacing?: ?boolean,
   lexicon?: {
     [string]: ?string | {[string]: ?string}
   }
@@ -92,7 +86,6 @@ class SpeechBuilder {
   }
 
   insertSpaceIfNeeded(nextText /*: string */) {
-    //if (this.opts.smartSpacing === false) return;
     const followedByChar = /^[^\s!?,.:;]/.test(nextText);
     const prev = lastChild(this.el);
     const value = prev && prev.value;
